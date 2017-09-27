@@ -1,0 +1,8 @@
+# ignore config
+config/
+
+# ignore .DS_Store and ._.DS_Store
+*.DS_Store
+
+# ignore logs
+logs/
