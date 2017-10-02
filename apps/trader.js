@@ -12,9 +12,9 @@ var configfile = require(__dirname + '/../config.js');
 var config = configfile.init();
 var setting = require('../setting.js');
 
-var logger = new loggingservice('trader');
+var logger = new loggingservice('trader',setting);
 var firebase = new firebaseService(config,logger,setting);
-var exchangeapi = new exchangeapiService(config,logger);
+var exchangeapi = new exchangeapiService(config,logger,firebase, setting);
 var order = new orderService(config,exchangeapi,firebase,logger,setting);
 var execution = new executionService(config,exchangeapi,firebase,logger,setting);
 var processHandler = new processHandlerService(config,exchangeapi,firebase,logger,execution,setting);

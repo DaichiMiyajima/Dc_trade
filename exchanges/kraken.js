@@ -3,7 +3,7 @@ var async = require('async');
 var Kraken = require(__dirname + '/../library/kraken.js');
 var tools = require(__dirname + '/../util/tools.js');
 
-var exchange = function(config, logger) {
+var exchange = function(config, logger, firebase, setting) {
 
     this.kraken = new Kraken(config.kraken.apiKey, config.kraken.secret);
 
@@ -14,6 +14,7 @@ var exchange = function(config, logger) {
     }.bind(this), 5);
 
     this.logger = logger;
+    this.firebase = firebase;
 
     _.bindAll(this, 'retry', 'errorHandler', 'postOrder', 'getExecution');
 

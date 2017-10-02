@@ -3,7 +3,7 @@ var async = require('async');
 var poloniex = require(__dirname + '/../library/poloniex.js');
 var tools = require(__dirname + '/../util/tools.js');
 
-var exchange = function(config, logger) {
+var exchange = function(config, logger, firebase, setting) {
 
     this.poloniex = new poloniex(config.poloniex.apiKey, config.poloniex.secret);
 
@@ -14,6 +14,7 @@ var exchange = function(config, logger) {
     }.bind(this), 10);
 
     this.logger = logger;
+    this.firebase = firebase;
 
     _.bindAll(this, 'retry', 'errorHandler', 'postOrder', 'getExecution');
 

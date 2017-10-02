@@ -11,7 +11,7 @@ var setting = require('../setting.js');
 
 var logger = new loggingservice('trader');
 var firebase = new firebaseService(config,logger,setting);
-var exchangeapi = new exchangeapiService(config,logger);
+var exchangeapi = new exchangeapiService(config,logger,firebase, setting);
 var execution = new executionService(config,exchangeapi,firebase,logger,setting);
 var monitortrade = new monitortradeService(config,firebase,logger,setting);
 

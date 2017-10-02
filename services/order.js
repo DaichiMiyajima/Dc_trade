@@ -48,6 +48,7 @@ order.prototype.orderApi = function(orderinfo){
 order.prototype.oneorderApi = function(orderinfo){
     if(this.setting.runningmode === 'production'){
         orderinfo.size = tools.round(orderinfo.size, 7);
+        console.log('oneorder');
         this.exchangeapi.postOrder(false, orderinfo, this.orderComplete(orderinfo));
     }
 };
@@ -57,6 +58,7 @@ order.prototype.orderComplete = function(orderinfo){
         if(err){
             this.logger.error('Order失敗' + '\n' + 'Error(order.js) \n' + 'Error' + JSON.stringify(err,undefined,4) + '\n\n' + 'Arg:' + JSON.stringify(orderinfo,undefined,4));
             this.firebase.lineNotification('Order失敗' + '\n' + 'Error' + JSON.stringify(err,undefined,4));
+            console.log('Order失敗' + '\n' + 'Error' + JSON.stringify(err,undefined,4));
             orderinfo.size_exec = 0;
             orderinfo.status = 'orderfail';
             this.emit('orderfailed', orderinfo);
@@ -64,6 +66,7 @@ order.prototype.orderComplete = function(orderinfo){
             var updateinfo = orderinfo;
             updateinfo.orderId = result;
             this.logger.debug('Orderが成功しました。' + '\n\n' + 'Arg:' + JSON.stringify(orderinfo,undefined,4));
+            console.log('Order成功' + '\n' + 'Error' + JSON.stringify(orderinfo,undefined,4));
             updateinfo.status = "open";
             updateinfo.ordertime = moment().format("YYYY-MM-DD HH:mm:ss");
             this.emit('orderComplete', updateinfo);

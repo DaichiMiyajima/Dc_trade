@@ -4,18 +4,21 @@ var kraken = require(__dirname + '/../exchanges/kraken.js');
 var bitflyer = require(__dirname + '/../exchanges/bitflyer.js');
 var poloniex = require(__dirname + '/../exchanges/poloniex.js');
 var publicAccess = require(__dirname + '/../exchanges/publicAccess.js');
+var quoine = require(__dirname + '/../exchanges/quoine.js');
 
-var api = function(config, logger, setting){
+var api = function(config, logger, firebase, setting){
 
-    var kraken_access = new kraken(config, logger);
-    var bitflyer_access = new bitflyer(config, logger);
-    var poloniex_access = new poloniex(config, logger);
+    var kraken_access = new kraken(config, logger, firebase, setting);
+    var bitflyer_access = new bitflyer(config, logger, firebase, setting);
+    var poloniex_access = new poloniex(config, logger, firebase , setting);
+    var quoine_access = new quoine(config, logger, firebase, setting);
     this.public_access = new publicAccess(config, logger, setting);
 
     this.exchangesAccess = [
         {api:kraken_access, name:"kraken"},
         {api:bitflyer_access, name:"bitflyer"},
         {api:poloniex_access, name:"poloniex"},
+        {api:quoine_access, name:"quoine"}
     ];
 
     _.bindAll(this, 'getQueue', 'postOrder', 'getExecution', 'getFiatRate');

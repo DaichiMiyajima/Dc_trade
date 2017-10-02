@@ -1,6 +1,6 @@
 var setting = {};
 
-setting.runningmode = 'verification' //production,verification
+setting.runningmode = 'production' //production,verification,oneorder
 
 setting.parentpass = 'production/'
 setting.commonpass = setting.parentpass + 'common'
@@ -30,8 +30,8 @@ setting.needfiatChange = [
 
 setting.minimumtrade = {
     poloniex : 0.0001,
-    kraken : 0.01,
-    bitflyer : 0.01,
+    kraken : 0.001,
+    bitflyer : 0.001,
     quoine : 0.01
 }
 

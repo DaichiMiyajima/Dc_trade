@@ -3,7 +3,7 @@ var async = require('async');
 var bitflyer = require(__dirname + '/../library/bitflyer.js');
 var tools = require(__dirname + '/../util/tools.js');
 
-var exchange = function(config, logger) {
+var exchange = function(config, logger, firebase, setting) {
 
     this.bitflyer = new bitflyer(config.bitflyer.apiKey, config.bitflyer.secret);
     this.currencyPair = {
@@ -18,6 +18,7 @@ var exchange = function(config, logger) {
     }.bind(this), 10);
 
     this.logger = logger;
+    this.firebase = firebase;
 
     _.bindAll(this, 'retry', 'errorHandler', 'postOrder', 'getExecution');
 
@@ -127,36 +128,46 @@ exchange.prototype.getExecution = function(retry, executioninfo, cb) {
         var pair = executioninfo.pair;
         var child_order_acceptance_id = executioninfo.orderId;
 
-        var handler = function(err, data) {
+                var handler = function(err, data) {
             if (!err) {
+                var datatime = moment().format("YYYY-MM-DD HH:mm:ss");
+                var complete;
                 var size_exec = 0;
                 var commission = 0;
                 var price_exec = 0;
                 var amount = 0;
                 var i = 0;
                 var status;
-                var complete = 'complete'; //bitflyerの場合、IOCなので即時約定する前提
-                _.each(data,function(execlist,key){
-                    size_exec = (Number(size_exec)*100000000 + Number(execlist.size)*100000000)/100000000;
-                    commission = Number(commission) + Number(execlist.commission);
-                    price_exec = Number(price_exec) + Number(execlist.price);
-                    amount = amount + tools.floor((Number(execlist.price) * Number(execlist.size)), 8);
-                    i = i + 1;
-                });
-                size_exec = tools.round(size_exec,7);
-                
-                //loop 数分で平均の金額を算出
-                price_exec = i === 0 ? 0 : price_exec / i;
-
-                if(Number(size_exec) !== 0 && Number(executioninfo.size) <= Number(size_exec)){
-                    status = 'closed';
-                }else if(Number(size_exec) !== 0 && Number(executioninfo.size) !== Number(size_exec)){
-                    status = 'partclosed';
+                var result;
+                if(data.length != 0){
+                    complete = 'complete';
+                    _.each(data,function(execlist,key){
+                        size_exec = (Number(size_exec) + Number(execlist.size));
+                        commission = Number(commission) + Number(execlist.commission);
+                        price_exec = Number(price_exec) + Number(execlist.price);
+                        amount = amount + tools.floor((Number(execlist.price) * Number(execlist.size)), 8);
+                        i = i + 1;
+                    });
+                    size_exec = tools.round(size_exec,7);
+                    //loop 数分で平均の金額を算出
+                    price_exec = i === 0 ? 0 : price_exec / i;
+                    if(Number(size_exec) !== 0 && Number(executioninfo.size) <= Number(size_exec)){
+                        status = 'closed';
+                    }else if(Number(size_exec) !== 0 && Number(executioninfo.size) !== Number(size_exec)){
+                        status = 'partclosed';
+                    }else{
+                        status = 'canceled';
+                    }
                 }else{
-                    status = 'canceled';
+                    if(executioninfo.ordertime && moment(datatime) < moment(executioninfo.ordertime).add(10, "minutes")){
+                        complete = 'open';
+                        status = 'open';
+                    }else{
+                        complete = 'complete';
+                        status = 'canceled';
+                    }
                 }
-                //結果をobjectに変更
-                var result = {
+                result = {
                     size_exec: size_exec,
                     commission : commission,
                     status : status,

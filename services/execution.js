@@ -80,7 +80,7 @@ execution.prototype.execConfirm = function(finishedOrder, primarykey){
             if(execInfo.complete === 'complete'){
                 execInfo.closetime = moment().format("YYYY-MM-DD HH:mm:ss");
                 if(execInfo.status !== 'closed'){
-                    if( tools.floor(execInfo.size - execInfo.size_exec, 7) >= 0.01){
+                    if( tools.floor(execInfo.size - execInfo.size_exec, 7) >= 0.0001){
                         this.emit('orderfailed', execInfo);
                     }else{
                         this.firebase.lineNotification('約定失敗：Orderのsize - size_execが0.01未満であるため、再orderは実施しません。' + '\n' + 'execInfo.size:' + execInfo.size + '\n' + 'execInfo.size_exec:' + execInfo.size_exec);

@@ -1,5 +1,6 @@
 
 var _ = require('underscore');
+var parseError = require('parse-error');
 
 var firebaseService = require(__dirname + '/../services/firebase.js');
 var orderService = require(__dirname + '/../services/order.js');
@@ -11,7 +12,7 @@ var setting = require('../setting.js');
 
 var logger = new loggingservice('oneorder');
 var firebase = new firebaseService(config,logger,setting);
-var exchangeapi = new exchangeapiService(config,logger);
+var exchangeapi = new exchangeapiService(config,logger,firebase, setting);
 var order = new orderService(config,exchangeapi,firebase,logger,setting);
 
 var oneorder = function(){
@@ -38,7 +39,7 @@ var oneorder = function(){
 
     //オーダー失敗：firebase.orderfailed
     order.on('orderfailed', function(object){
-        if( object.size >= 0.01){
+        if( object.size >= setting.minimumtrade[object.exchange]){
             firebase.setObject(object, setting.orderFailedPass, function(){
                 if(object.orderfailkey){
                     firebase.removeObject(setting.orderFailedPass, object.orderfailkey,function(){
@@ -59,6 +60,13 @@ var oneorder = function(){
         }
     });
 
+    //Error catch
+    process.on('uncaughtException', function (err) {
+        var errorparse = parseError(err);
+        firebase.lineNotification("予期しないエラーが発生しました。" + "¥n" + JSON.stringify(errorparse,undefined,4));
+        logger.debug("予期しないエラーが発生しました。" + "¥n" + JSON.stringify(errorparse,undefined,4));
+    }.bind(this));
+
     _.bindAll(this, 'start');
 
 }
@@ -71,6 +79,8 @@ oneorder.prototype.start = function(datakey) {
             if(!orderinfo.orderId && datakey === orderinfokey){
                 orderinfo.key = orderinfokey;
                 firebase.emit("getIdentifiedUnfinishedOrder", orderinfo);
+            }else{
+                firebase.lineNotification("条件に合致しません：!orderinfo.orderId && datakey === orderinfokey");
             }
         }.bind(this));
     });

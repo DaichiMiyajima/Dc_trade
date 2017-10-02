@@ -48,12 +48,14 @@ var logger = function(app, setting) {
 
 logger.prototype.log = function(message) {
 
+    console.log(message);
     this.logger.log('INFO', util.inspect(message));
 
 };
 
 logger.prototype.debug = function(message) {
 
+    console.log(message);
     if(this.debugEnabled) {
 
         this.logger.log('DEBUG', util.inspect(message));
@@ -63,7 +65,7 @@ logger.prototype.debug = function(message) {
 };
 
 logger.prototype.error = function(message) {
-
+    console.log(message);
     this.logger.log('ERROR', util.inspect(message));
 
 };
