@@ -73,5 +73,5 @@ app.prototype.start = function(){
     }
 }
 
-var candyTrade = new app();
-candyTrade.start();
+var dcTrade = new app();
+dcTrade.start();
