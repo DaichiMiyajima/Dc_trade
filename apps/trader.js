@@ -90,13 +90,7 @@ var trader = function(){
             var message = '約定が失敗しました。再オーダーのデータを作成します。';
         }
         firebase.setObject(object, setting.orderFailedPass);
-        firebase.lineNotification(message + "¥n" + JSON.stringify({
-            exchange: object.exchange,
-            price: object.price,
-            size : object.size,
-            size_exec : object.size_exec,
-            result : object.result
-        },undefined,4));
+        firebase.lineNotification(message + "\n" + JSON.stringify(object, undefined, 4));
     });
 
     //オーダー失敗：firebase.orderfailed
@@ -124,6 +118,9 @@ var trader = function(){
         firebase.moveObject(execInfo, passFrom, passTo, key, function(){
             monitortrade.monitorfinish(execInfo);
         });
+        if(execInfo.status === 'closed'){
+            firebase.lineNotification('約定しました。' + "\n" + JSON.stringify(execInfo, undefined, 4));
+        }
     });
 
     //Error catch
@@ -139,7 +136,6 @@ var trader = function(){
 
 trader.prototype.start = function() {
 
-    firebase.lineNotification("Candy_Tradeを開始します。");
     firebase.getRunning();
 
 };

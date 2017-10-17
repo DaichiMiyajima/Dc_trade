@@ -26,7 +26,7 @@ processHandler.prototype.stopApplication = function(){
                 this.logger.debug("緊急停止成功しました");
                 this.firebase.lineNotification("緊急停止成功しました",this.firebase.disconnect);
                 clearInterval(stopprocess);
-                var result =  execSync('forever stop candy.js');
+                var result =  execSync('forever stop trade.js');
             }else{
                 this.logger.debug("スレッド継続中:" + result + "件");
                 this.firebase.lineNotification("スレッド継続中:" + result + "件");

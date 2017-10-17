@@ -154,7 +154,7 @@ exchange.prototype.getExecution = function(retry, executioninfo, cb) {
                     var price_exec = 0;
                     var i = 0;
                     _.each(data.executions,function(execlist,key){
-                        price_exec = Number(price_exec) + Number(execlist.rate);
+                        price_exec = Number(price_exec) + Number(execlist.price);
                         i = i + 1;
                     });
                     //loop 数分で平均の金額を算出
@@ -166,7 +166,7 @@ exchange.prototype.getExecution = function(retry, executioninfo, cb) {
                         commission : Number(execinfo.order_fee),
                         status : status,
                         complete : complete,
-                        price_exec : Number(execinfo.price),
+                        price_exec : Number(price_exec),
                         amount : amount
                     };
                     //cancel order of ot

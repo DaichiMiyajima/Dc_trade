@@ -30,7 +30,10 @@ order.prototype.orderApi = function(orderinfo){
         if(orderinfo.time && moment(datatime) < moment(orderinfo.time).add(3, "minutes")){
             this.emit('orderbackup', orderinfo);
             orderinfo.size = tools.round(orderinfo.size, 7);
-            //this.exchangeapi.postOrder(false, orderinfo, this.orderComplete(orderinfo));
+            this.exchangeapi.postOrder(false, orderinfo, this.orderComplete(orderinfo));
+            if(!orderinfo.orderfailkey){
+                this.firebase.lineNotification('Order予定情報' + '\n' + JSON.stringify(orderinfo,undefined,4));
+            }
         }
     }else{
         this.emit('orderbackup', orderinfo);

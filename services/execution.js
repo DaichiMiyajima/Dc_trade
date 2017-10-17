@@ -76,6 +76,8 @@ execution.prototype.executionApi = function(finishedOrderinfo){
 
 execution.prototype.execConfirm = function(finishedOrder, primarykey){
     return function(err, result){
+        console.log("execConfirm------------------");
+        console.log(result);
         var finishExec = function(execInfo){
             if(execInfo.complete === 'complete'){
                 execInfo.closetime = moment().format("YYYY-MM-DD HH:mm:ss");

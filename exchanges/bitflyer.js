@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var async = require('async');
+var moment = require("moment");
 var bitflyer = require(__dirname + '/../library/bitflyer.js');
 var tools = require(__dirname + '/../util/tools.js');
 
@@ -159,7 +160,7 @@ exchange.prototype.getExecution = function(retry, executioninfo, cb) {
                         status = 'canceled';
                     }
                 }else{
-                    if(executioninfo.ordertime && moment(datatime) < moment(executioninfo.ordertime).add(10, "minutes")){
+                    if(executioninfo.ordertime && moment(datatime) < moment(executioninfo.ordertime).add(3, "minutes")){
                         complete = 'open';
                         status = 'open';
                     }else{
