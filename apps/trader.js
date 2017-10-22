@@ -85,15 +85,20 @@ var trader = function(){
 
     execution.on('orderfailed', function(object){
         if(object.status === 'partclosed'){
-            var message = '一部約定しました。再オーダーのデータを作成します。';
+            var message = '一部約定しました。再オーダーのデータを作成します。' + '(' + object.orderpairkey  + ')';
         }else{
-            var message = '約定が失敗しました。再オーダーのデータを作成します。';
+            var message = '約定が失敗しました。再オーダーのデータを作成します。' + '(' + object.orderpairkey  + ')';
         }
         firebase.setObject(object, setting.orderFailedPass);
-        firebase.lineNotification(message + "\n" + JSON.stringify(object, undefined, 4));
+        firebase.lineNotification(message + "\n" 
+            + " OrderId: " + object.orderId + "\n"
+            + ' Result  : ' + object.result + '\n' 
+            + ' Exchange: ' + object.exchange + '\n'
+            + ' Pair   : ' + object.formatedpair + '\n' 
+            + ' Price   : ' + object.formatedprice + '\n'
+            + ' Size   : ' + object.size + '(約定：' + object.size_exec + ')');
     });
 
-    //オーダー失敗：firebase.orderfailed
     order.on('orderfailed', function(object){
         if( object.size >= setting.minimumtrade[object.exchange]){
             firebase.setObject(object, setting.orderFailedPass, function(){
@@ -111,7 +116,6 @@ var trader = function(){
         }
     });
 
-    //firebase.orderUpdateFromFinishedToCompletedを呼び出す
     execution.on('orderUpdateFromFinishedToCompleted', function(execInfo,key){
         var passFrom = setting.finishedpass;
         var passTo   = setting.completedpass;
@@ -119,11 +123,16 @@ var trader = function(){
             monitortrade.monitorfinish(execInfo);
         });
         if(execInfo.status === 'closed'){
-            firebase.lineNotification('約定しました。' + "\n" + JSON.stringify(execInfo, undefined, 4));
+            firebase.lineNotification('約定しました。' + '(' + execInfo.orderpairkey  + ')' + "\n"
+                + " OrderId: " + execInfo.orderId + "\n"
+                + ' Result  : ' + execInfo.result + '\n' 
+                + ' Exchange: ' + execInfo.exchange + '\n'
+                + ' Pair   : ' + execInfo.formatedpair + '\n' 
+                + ' Price   : ' + execInfo.formatedprice + '\n'
+                + ' Size   : ' + execInfo.size + '(約定：' + execInfo.size_exec + ')');
         }
     });
 
-    //Error catch
     process.on('uncaughtException', function (err) {
         var errorparse = parseError(err);
         firebase.lineNotification("予期しないエラーが発生しました。" + "¥n" + JSON.stringify(errorparse,undefined,4));

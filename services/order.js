@@ -32,7 +32,12 @@ order.prototype.orderApi = function(orderinfo){
             orderinfo.size = tools.round(orderinfo.size, 7);
             this.exchangeapi.postOrder(false, orderinfo, this.orderComplete(orderinfo));
             if(!orderinfo.orderfailkey){
-                this.firebase.lineNotification('Order予定情報' + '\n' + JSON.stringify(orderinfo,undefined,4));
+                this.firebase.lineNotification('Order予定情報(' + orderinfo.orderpairkey + ')' + '\n' 
+                    + ' Result  : ' + orderinfo.result + '\n' 
+                    + ' Exchange: ' + orderinfo.exchange + '\n'
+                    + ' Pair   : ' + orderinfo.formatedpair + '\n' 
+                    + ' Price   : ' + orderinfo.formatedprice + '\n'
+                    + ' Size   : ' + orderinfo.size);
             }
         }
     }else{
