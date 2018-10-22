@@ -8,7 +8,7 @@
     "crypto": "^0.0.3",
     "firebase-admin": "^4.2.1",
     "jwt-simple": "^0.5.1",
-    "mathjs": "^3.13.3",
+    "mathjs": "^3.20.2",
     "moment": "^2.22.2",
     "nonce": "^1.0.4",
     "parse-error": "^0.2.0",
