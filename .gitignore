@@ -6,3 +6,5 @@ config/
 
 # ignore logs
 logs/
+
+node_modules/

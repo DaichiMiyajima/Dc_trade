@@ -1,0 +1,36 @@
+{
+  "name": "dc_trade",
+  "version": "1.0.0",
+  "description": "Dc_trade auto trade function",
+  "main": "trade.js",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "crypto": "^0.0.3",
+    "firebase-admin": "^4.2.1",
+    "jwt-simple": "^0.5.1",
+    "mathjs": "^3.13.3",
+    "moment": "^2.22.2",
+    "nonce": "^1.0.4",
+    "parse-error": "^0.2.0",
+    "qs": "^6.4.0",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0",
+    "underscore": "^1.8.3",
+    "winston": "^2.4.4",
+    "winston-daily-rotate-file": "^1.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://DaichiMiyajima@github.com/DaichiMiyajima/Dc_trade.git"
+  },
+  "author": "Daichi Miyajima",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DaichiMiyajima/Dc_trade/issues"
+  },
+  "homepage": "https://github.com/DaichiMiyajima/Dc_trade#readme"
+}
